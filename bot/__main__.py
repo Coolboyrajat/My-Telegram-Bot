@@ -67,9 +67,10 @@ def stats(update, context):
 
 def start(update, context):
     buttons = ButtonMaker()
-    buttons.buildbutton("Repo", "https://github.com/https://github.com/Coolboyrajat/My-Telegram-Bot")
+    buttons.buildbutton("Repo", "https://github.com/Coolboyrajat/My-Telegram-Bot")
     buttons.buildbutton("Channel", "https://t.me/Radioactive_cube")
-    reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
+    buttons.builtbutton("Drive Access", "")
+    reply_markup = InlineKeyboardMarkup(buttons.build_menu(3))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
         start_string = f'''
 This bot can mirror all your links to Google Drive!
