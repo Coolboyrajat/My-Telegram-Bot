@@ -8,7 +8,8 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 - Multi drive Selection before uploading;
   - If have enough rights it will show automatically 🤔, help!!
 - Uptobox can be use as Premium/Non-Premium Both;
-- leech 4gb files if Owner has a Premium.
+- leech 4gb files if Owner has a Premium;
+- Reboot HEROKU for bot.
 
 # Features:
 ## By [Radioactive](https://github.com/Coolboyrajat)
