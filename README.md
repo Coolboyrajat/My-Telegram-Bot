@@ -147,10 +147,11 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `SUDO_USERS`: Fill user_id of users whom you want to give sudo permission. Separate them by space.
 - `IGNORE_PENDING_REQUESTS`: Ignore pending requests after restart. Default is `False`. `Bool`
 - `USE_SERVICE_ACCOUNTS`: Whether to use Service Accounts or not. For this to work see [Using Service Accounts](https://github.com/Coolboyrajat/My-Telegram-Bot#generate-service-accounts-what-is-service-account) section below. Default is `False`. `Bool`
-- `INDEX_URL`: Refer to https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index, https://github.com/Coolboyrajat/Responsive-2-Mode-Index-for-Drive
+- `INDEX_URL`: Refer to https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index , https://github.com/Coolboyrajat/Responsive-2-Mode-Index-for-Drive
 - `STATUS_LIMIT`: Limit the no. of tasks shown in status message with buttons. **NOTE**: Recommended limit is `5` tasks.
 - `STOP_DUPLICATE`: Bot will check file in Drive, if it is present in Drive, downloading or cloning will be stopped. (**NOTE**: File will be checked using filename not file hash, so this feature is not perfect yet). Default is `False`. `Bool`
 - `CMD_INDEX`: commands index number. This number will added at the end all commands.
+- `UPTOBOX PREMIUM`: Boolean Value. Set it `True` if you have a Premium Account and don't want to wait. By default it is `False` for free-user with waiting time which require token. Remember Premium Account uses different Script to work! . 
 - `UPTOBOX_TOKEN`: Uptobox token to mirror uptobox links. Get it from [Uptobox Premium Account](https://uptobox.com/my_account).
 - `TORRENT_TIMEOUT`: Timeout of dead torrents downloading with qBittorrent and Aria2c in seconds.
 - `EXTENTION_FILTER`: File extentions that won't upload/clone. Separate them by space.
@@ -215,8 +216,9 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `VIEW_LINK`: View Link button to open file Index Link in browser instead of direct download link, you can figure out if it's compatible with your Index code or not, open any video from you Index and check if its URL ends with `?a=view`, if yes make it `True`, compatible with [BhadooIndex](https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index) Code. Default is `False`. `Bool`
 
 - Three buttons are already added including Drive Link, Index Link, and View Link, you can add extra buttons, if you don't know what are the below entries, simply leave them empty.
-  - `BUTTON_FOUR_NAME`:
-  - `BUTTON_FOUR_URL`:
+
+- `DELETE_FILE/FOLDER`: Allow User to delete upload files/folder owned by the respective User. Admin and Sudo User also have the right to do the same. Default it is `false` . `Bool`
+
   - `BUTTON_FIVE_NAME`:
   - `BUTTON_FIVE_URL`:
   - `BUTTON_SIX_NAME`:
@@ -373,6 +375,7 @@ del - Delete file/folder from Drive
 log - Get the Bot Log
 shell - Run commands in Shell
 restart - Restart the Bot
+reboot - Restart HEROKU
 stats - Bot Usage Stats
 ping - Ping the Bot
 help - All cmds with description
