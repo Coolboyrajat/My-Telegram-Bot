@@ -1,4 +1,4 @@
-The_Positive_Viewerfrom logging import getLogger, FileHandler, StreamHandler, INFO, basicConfig, error as log_error, info as log_info, warning as log_warning
+from logging import getLogger, FileHandler, StreamHandler, INFO, basicConfig, error as log_error, info as log_info, warning as log_warning
 from socket import setdefaulttimeout
 from faulthandler import enable as faulthandler_enable
 from telegram.ext import Updater as tgUpdater
@@ -34,21 +34,6 @@ load_dotenv('config.env', override=True)
 def getConfig(name: str):
     return environ[name]
 
-try:
-    NETRC_URL = getConfig('NETRC_URL')
-    if len(NETRC_URL) == 0:
-        raise KeyError
-    try:
-        res = rget(NETRC_URL)
-        if res.status_code == 200:
-            with open('.netrc', 'wb+') as f:
-                f.write(res.content)
-        else:
-            log_error(f"Failed to download .netrc {res.status_code}")
-    except Exception as e:
-        log_error(f"NETRC_URL: {e}")
-except:
-    pass
 try:
     SERVER_PORT = getConfig('SERVER_PORT')
     if len(SERVER_PORT) == 0:
@@ -104,12 +89,50 @@ download_dict = {}
 # value: [rss_feed, last_link, last_title, filter]
 rss_dict = {}
 
+# REQUIRED CONFIG:
+try:
+    OWNER_ID = int(getConfig('OWNER_ID'))
+    BOT_TOKEN = getConfig('BOT_TOKEN')
+    parent_id = getConfig('GDRIVE_FOLDER_ID')
+    TELEGRAM_API = getConfig('TELEGRAM_API')
+    TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
+    DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
+    if not DOWNLOAD_DIR.endswith("/"):
+        DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
+    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
+    AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
+except:
+    LOGGER.error("One or more env variables missing! Exiting now")
+    exit(1)
+try:
+    IS_TEAM_DRIVE = getConfig('IS_TEAM_DRIVE')
+    IS_TEAM_DRIVE = IS_TEAM_DRIVE.lower() == 'true'
+except:
+    IS_TEAM_DRIVE = False
+try:
+    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_UPLOAD_MESSAGE_DURATION'))
+except KeyError as e:
+    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = -1
+    LOGGER.warning("AUTO_DELETE_UPLOAD_MESSAGE_DURATION var missing!")
+    pass
+
+LOGGER.info("Generating BOT_SESSION_STRING")
+app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
+
+# OPTIONAL CONFIG:
+
+try:
+    DB_URI = getConfig('DATABASE_URL')
+    if len(DB_URI) == 0:
+        raise KeyError
+except:
+    DB_URI = None
+
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
 AS_DOC_USERS = set()
 AS_MEDIA_USERS = set()
 EXTENTION_FILTER = set(['.torrent'])
-LEECH_LOG = set()
 MIRROR_LOGS = set()
 try:
     aid = getConfig('AUTHORIZED_CHATS')
@@ -125,6 +148,65 @@ try:
         SUDO_USERS.add(int(_id))
 except:
     pass
+
+try:
+    USE_SERVICE_ACCOUNTS = getConfig('USE_SERVICE_ACCOUNTS')
+    USE_SERVICE_ACCOUNTS = USE_SERVICE_ACCOUNTS.lower() == 'true'
+except:
+    USE_SERVICE_ACCOUNTS = False
+try:
+    INDEX_URL = getConfig('INDEX_URL').rstrip("/")
+    if len(INDEX_URL) == 0:
+        raise KeyError
+    INDEX_URLS.append(INDEX_URL)
+except:
+    INDEX_URL = None
+    INDEX_URLS.append(None)
+try:
+    STATUS_LIMIT = getConfig('STATUS_LIMIT')
+    if len(STATUS_LIMIT) == 0:
+        raise KeyError
+    STATUS_LIMIT = int(STATUS_LIMIT)
+except:
+    STATUS_LIMIT = None
+try:
+    STOP_DUPLICATE = getConfig('STOP_DUPLICATE')
+    STOP_DUPLICATE = STOP_DUPLICATE.lower() == 'true'
+except:
+    STOP_DUPLICATE = False
+try:
+    CMD_INDEX = getConfig('CMD_INDEX')
+    if len(CMD_INDEX) == 0:
+        raise KeyError
+except:
+    CMD_INDEX = ''
+try:
+    UPTOBOX_PREMIUM = getConfig('UPTOBOX_PREMIUM')
+    UPTOBOX_PREMIUM = UPTOBOX_PREMIUM.lower() == 'true'
+    if UPTOBOX_PREMIUM == 'true':
+        try:
+            UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
+            if len(UPTOBOX_TOKEN) == 0:
+                raise KeyError
+        except:
+            UPTOBOX_TOKEN = None
+    else:
+        log_error(f"Failed to Acquire Uptobox Premium Token")        
+except:
+    UPTOBOX_PREMIUM = False
+try:
+    UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
+    if len(UPTOBOX_TOKEN) == 0:
+        raise KeyError
+except:
+    UPTOBOX_TOKEN = None
+try:
+    TORRENT_TIMEOUT = getConfig('TORRENT_TIMEOUT')
+    if len(TORRENT_TIMEOUT) == 0:
+        raise KeyError
+    TORRENT_TIMEOUT = int(TORRENT_TIMEOUT)
+except:
+    TORRENT_TIMEOUT = None
 try:
     fx = getConfig('EXTENTION_FILTER')
     if len(fx) > 0:
@@ -134,12 +216,29 @@ try:
 except:
     pass
 try:
-    aid = getConfig('LEECH_LOG')
-    aid = aid.split(' ')
-    for _id in aid:
-        LEECH_LOG.add(int(_id))
+    INCOMPLETE_TASK_NOTIFIER = getConfig('INCOMPLETE_TASK_NOTIFIER')
+    INCOMPLETE_TASK_NOTIFIER = INCOMPLETE_TASK_NOTIFIER.lower() == 'true'
 except:
-    pass
+    INCOMPLETE_TASK_NOTIFIER = False
+try:
+    MULTI_GDRIVE = getConfig('MULTI_GDRIVE')
+    MULTI_GDRIVE = MULTI_GDRIVE.lower() == 'true'
+    if MULTI_GDRIVE == 'true':
+        try:
+            MULTI_GDRIVE_ID = getConfig('MULTI_GDRIVE_ID')
+            if len(MULTI_GDRIVE_ID) == 0:
+                raise KeyError
+        except:
+            MULTI_GDRIVE_ID = None
+    else:
+        log_error(f"Failed to get Drive ID's")
+except:
+    MULTI_GDRIVE = False
+try:
+    BOT_PM = getConfig('BOT_PM')
+    BOT_PM = BOT_PM.lower() == 'true'
+except KeyError:
+    BOT_PM = False
 try:
     aid = getConfig('MIRROR_LOGS')
     aid = aid.split(' ')
@@ -147,37 +246,6 @@ try:
         MIRROR_LOGS.add(int(_id))
 except:
     pass
-try:
-    BOT_TOKEN = getConfig('BOT_TOKEN')
-    parent_id = getConfig('GDRIVE_FOLDER_ID')
-    DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
-    if not DOWNLOAD_DIR.endswith("/"):
-        DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
-    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
-    OWNER_ID = int(getConfig('OWNER_ID'))
-    AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
-    TELEGRAM_API = getConfig('TELEGRAM_API')
-    TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
-except:
-    LOGGER.error("One or more env variables missing! Exiting now")
-    exit(1)
-try:
-    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_UPLOAD_MESSAGE_DURATION'))
-except KeyError as e:
-    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = -1
-    LOGGER.warning("AUTO_DELETE_UPLOAD_MESSAGE_DURATION var missing!")
-    pass
-LOGGER.info("Generating BOT_SESSION_STRING")
-app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
-
-try:
-    USER_SESSION_STRING = getConfig('USER_SESSION_STRING')
-    if len(USER_SESSION_STRING) == 0:
-        raise KeyError
-    rss_session = Client(name='rss_session', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, session_string=USER_SESSION_STRING, parse_mode=enums.ParseMode.HTML, no_updates=True)
-except:
-    USER_SESSION_STRING = None
-    rss_session = None
 
 def aria2c_init():
     try:
@@ -194,6 +262,8 @@ def aria2c_init():
         log_error(f"Aria2c initializing error: {e}")
 Thread(target=aria2c_init).start()
 sleep(1.5)
+
+# MEGA CONFIG:
 
 try:
     MEGAREST = getConfig('MEGAREST')
@@ -234,12 +304,17 @@ if MEGAREST is True:
 else:
     MEGA_EMAIL_ID = None
     MEGA_PASSWORD = None
+
+# LEECH CONFIG:
+
+LEECH_LOG = set()
 try:
-    DB_URI = getConfig('DATABASE_URL')
-    if len(DB_URI) == 0:
-        raise KeyError
+    aid = getConfig('LEECH_LOG')
+    aid = aid.split(' ')
+    for _id in aid:
+        LEECH_LOG.add(int(_id))
 except:
-    DB_URI = None
+    pass
 try:
     TG_SPLIT_SIZE = getConfig('TG_SPLIT_SIZE')
     if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097151000:
@@ -247,27 +322,9 @@ try:
     TG_SPLIT_SIZE = int(TG_SPLIT_SIZE)
 except:
     TG_SPLIT_SIZE = 2097151000
-try:
-    STATUS_LIMIT = getConfig('STATUS_LIMIT')
-    if len(STATUS_LIMIT) == 0:
-        raise KeyError
-    STATUS_LIMIT = int(STATUS_LIMIT)
-except:
-    STATUS_LIMIT = None
-try:
-    UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
-    if len(UPTOBOX_TOKEN) == 0:
-        raise KeyError
-except:
-    UPTOBOX_TOKEN = None
-try:
-    INDEX_URL = getConfig('INDEX_URL').rstrip("/")
-    if len(INDEX_URL) == 0:
-        raise KeyError
-    INDEX_URLS.append(INDEX_URL)
-except:
-    INDEX_URL = None
-    INDEX_URLS.append(None)
+
+# TORRENT SEARCH:
+
 try:
     SEARCH_API_LINK = getConfig('SEARCH_API_LINK').rstrip("/")
     if len(SEARCH_API_LINK) == 0:
@@ -281,18 +338,10 @@ try:
     SEARCH_LIMIT = int(SEARCH_LIMIT)
 except:
     SEARCH_LIMIT = 0
-try:
-    RSS_COMMAND = getConfig('RSS_COMMAND')
-    if len(RSS_COMMAND) == 0:
-        raise KeyError
-except:
-    RSS_COMMAND = None
-try:
-    CMD_INDEX = getConfig('CMD_INDEX')
-    if len(CMD_INDEX) == 0:
-        raise KeyError
-except:
-    CMD_INDEX = ''
+
+
+# SIZE LIMITS:
+
 try:
     TORRENT_DIRECT_LIMIT = getConfig('TORRENT_DIRECT_LIMIT')
     if len(TORRENT_DIRECT_LIMIT) == 0:
@@ -300,6 +349,13 @@ try:
     TORRENT_DIRECT_LIMIT = float(TORRENT_DIRECT_LIMIT)
 except:
     TORRENT_DIRECT_LIMIT = None
+try:
+    ZIP_UNZIP_LIMIT = getConfig('ZIP_UNZIP_LIMIT')
+    if len(ZIP_UNZIP_LIMIT) == 0:
+        raise KeyError
+    ZIP_UNZIP_LIMIT = float(ZIP_UNZIP_LIMIT)
+except:
+    ZIP_UNZIP_LIMIT = None
 try:
     CLONE_LIMIT = getConfig('CLONE_LIMIT')
     if len(CLONE_LIMIT) == 0:
@@ -321,20 +377,9 @@ try:
     STORAGE_THRESHOLD = float(STORAGE_THRESHOLD)
 except:
     STORAGE_THRESHOLD = None
-try:
-    ZIP_UNZIP_LIMIT = getConfig('ZIP_UNZIP_LIMIT')
-    if len(ZIP_UNZIP_LIMIT) == 0:
-        raise KeyError
-    ZIP_UNZIP_LIMIT = float(ZIP_UNZIP_LIMIT)
-except:
-    ZIP_UNZIP_LIMIT = None
-try:
-    RSS_CHAT_ID = getConfig('RSS_CHAT_ID')
-    if len(RSS_CHAT_ID) == 0:
-        raise KeyError
-    RSS_CHAT_ID = int(RSS_CHAT_ID)
-except:
-    RSS_CHAT_ID = None
+
+# RSS:
+
 try:
     RSS_DELAY = getConfig('RSS_DELAY')
     if len(RSS_DELAY) == 0:
@@ -343,20 +388,44 @@ try:
 except:
     RSS_DELAY = 900
 try:
-    TORRENT_TIMEOUT = getConfig('TORRENT_TIMEOUT')
-    if len(TORRENT_TIMEOUT) == 0:
+    RSS_COMMAND = getConfig('RSS_COMMAND')
+    if len(RSS_COMMAND) == 0:
         raise KeyError
-    TORRENT_TIMEOUT = int(TORRENT_TIMEOUT)
 except:
-    TORRENT_TIMEOUT = None
+    RSS_COMMAND = None
 try:
-    BUTTON_FOUR_NAME = getConfig('BUTTON_FOUR_NAME')
-    BUTTON_FOUR_URL = getConfig('BUTTON_FOUR_URL')
-    if len(BUTTON_FOUR_NAME) == 0 or len(BUTTON_FOUR_URL) == 0:
+    RSS_CHAT_ID = getConfig('RSS_CHAT_ID')
+    if len(RSS_CHAT_ID) == 0:
         raise KeyError
+    RSS_CHAT_ID = int(RSS_CHAT_ID)
 except:
-    BUTTON_FOUR_NAME = None
-    BUTTON_FOUR_URL = None
+    RSS_CHAT_ID = None
+try:
+    USER_SESSION_STRING = getConfig('USER_SESSION_STRING')
+    if len(USER_SESSION_STRING) == 0:
+        raise KeyError
+    rss_session = Client(name='rss_session', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, session_string=USER_SESSION_STRING, parse_mode=enums.ParseMode.HTML, no_updates=True)
+except:
+    USER_SESSION_STRING = None
+    rss_session = None
+    
+# BUTTONS:
+
+try:
+    VIEW_LINK = getConfig('VIEW_LINK')
+    VIEW_LINK = VIEW_LINK.lower() == 'true'
+except:
+    VIEW_LINK = False
+try:
+    SOURCE_LINK = getConfig('SOURCE_LINK')
+    SOURCE_LINK = SOURCE_LINK.lower() == 'true'
+except KeyError:
+    SOURCE_LINK = False
+try:
+    DELETE_FILE = getConfig('DELETE_FILE')
+    DELETE_FILE = DELETE_FILE.lower() == 'true'
+except:
+    DELETE_FILE = False
 try:
     BUTTON_FIVE_NAME = getConfig('BUTTON_FIVE_NAME')
     BUTTON_FIVE_URL = getConfig('BUTTON_FIVE_URL')
@@ -373,36 +442,29 @@ try:
 except:
     BUTTON_SIX_NAME = None
     BUTTON_SIX_URL = None
+
+
+# qBITORRENT:
+
 try:
-    INCOMPLETE_TASK_NOTIFIER = getConfig('INCOMPLETE_TASK_NOTIFIER')
-    INCOMPLETE_TASK_NOTIFIER = INCOMPLETE_TASK_NOTIFIER.lower() == 'true'
+    BASE_URL = getConfig('BASE_URL_OF_BOT').rstrip("/")
+    if len(BASE_URL) == 0:
+        raise KeyError
 except:
-    INCOMPLETE_TASK_NOTIFIER = False
-try:
-    STOP_DUPLICATE = getConfig('STOP_DUPLICATE')
-    STOP_DUPLICATE = STOP_DUPLICATE.lower() == 'true'
-except:
-    STOP_DUPLICATE = False
-try:
-    VIEW_LINK = getConfig('VIEW_LINK')
-    VIEW_LINK = VIEW_LINK.lower() == 'true'
-except:
-    VIEW_LINK = False
-try:
-    IS_TEAM_DRIVE = getConfig('IS_TEAM_DRIVE')
-    IS_TEAM_DRIVE = IS_TEAM_DRIVE.lower() == 'true'
-except:
-    IS_TEAM_DRIVE = False
-try:
-    USE_SERVICE_ACCOUNTS = getConfig('USE_SERVICE_ACCOUNTS')
-    USE_SERVICE_ACCOUNTS = USE_SERVICE_ACCOUNTS.lower() == 'true'
-except:
-    USE_SERVICE_ACCOUNTS = False
+    log_warning('BASE_URL_OF_BOT not provided!')
+    BASE_URL = None
 try:
     WEB_PINCODE = getConfig('WEB_PINCODE')
     WEB_PINCODE = WEB_PINCODE.lower() == 'true'
 except:
     WEB_PINCODE = False
+try:
+    QB_SEED = getConfig('QB_SEED')
+    QB_SEED = QB_SEED.lower() == 'true'
+except:
+    QB_SEED = False
+
+# SHORTNER:
 try:
     SHORTENER = getConfig('SHORTENER')
     SHORTENER_API = getConfig('SHORTENER_API')
@@ -411,18 +473,7 @@ try:
 except:
     SHORTENER = None
     SHORTENER_API = None
-try:
-    IGNORE_PENDING_REQUESTS = getConfig("IGNORE_PENDING_REQUESTS")
-    IGNORE_PENDING_REQUESTS = IGNORE_PENDING_REQUESTS.lower() == 'true'
-except:
-    IGNORE_PENDING_REQUESTS = False
-try:
-    BASE_URL = getConfig('BASE_URL_OF_BOT').rstrip("/")
-    if len(BASE_URL) == 0:
-        raise KeyError
-except:
-    log_warning('BASE_URL_OF_BOT not provided!')
-    BASE_URL = None
+
 try:
     AS_DOCUMENT = getConfig('AS_DOCUMENT')
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'
@@ -433,11 +484,6 @@ try:
     EQUAL_SPLITS = EQUAL_SPLITS.lower() == 'true'
 except:
     EQUAL_SPLITS = False
-try:
-    QB_SEED = getConfig('QB_SEED')
-    QB_SEED = QB_SEED.lower() == 'true'
-except:
-    QB_SEED = False
 try:
     CUSTOM_FILENAME = getConfig('CUSTOM_FILENAME')
     if len(CUSTOM_FILENAME) == 0:
@@ -450,6 +496,15 @@ try:
         raise KeyError
 except:
     CRYPT = None
+
+# TELEGRAPH UI:
+
+try:
+    TITLE_NAME = getConfig('TITLE_NAME')
+    if len(TITLE_NAME) == 0:
+        TITLE_NAME = 'Radioactive-Mirror-Search'
+except KeyError:
+    TITLE_NAME = 'Radioactive-Mirror-Search'
 try:
     AUTHOR_NAME = getConfig('AUTHOR_NAME')
     if len(AUTHOR_NAME) == 0:
@@ -471,22 +526,7 @@ try:
 except KeyError:
     GD_INFO = 'Uploaded by Radioactive Bot'
 
-try:
-    TITLE_NAME = getConfig('TITLE_NAME')
-    if len(TITLE_NAME) == 0:
-        TITLE_NAME = 'Radioactive-Mirror-Search'
-except KeyError:
-    TITLE_NAME = 'Radioactive-Mirror-Search'
-try:
-    SOURCE_LINK = getConfig('SOURCE_LINK')
-    SOURCE_LINK = SOURCE_LINK.lower() == 'true'
-except KeyError:
-    SOURCE_LINK = False
-try:
-    BOT_PM = getConfig('BOT_PM')
-    BOT_PM = BOT_PM.lower() == 'true'
-except KeyError:
-    BOT_PM = False
+# APP DRIVE:
 try:
     APPDRIVE_EMAIL = getConfig('APPDRIVE_EMAIL')
     APPDRIVE_PASS = getConfig('APPDRIVE_PASS')
@@ -495,6 +535,7 @@ try:
 except KeyError:
     APPDRIVE_EMAIL = None
     APPDRIVE_PASS = None
+     
 try:
     HEROKU_API_KEY = getConfig('HEROKU_API_KEY')
     HEROKU_APP_NAME = getConfig('HEROKU_APP_NAME')
@@ -504,21 +545,9 @@ except KeyError:
     LOGGER.warning("Heroku details not entered.")
     HEROKU_API_KEY = None
     HEROKU_APP_NAME = None
-try:
-    TOKEN_PICKLE_URL = getConfig('TOKEN_PICKLE_URL')
-    if len(TOKEN_PICKLE_URL) == 0:
-        raise KeyError
-    try:
-        res = rget(TOKEN_PICKLE_URL)
-        if res.status_code == 200:
-            with open('token.pickle', 'wb+') as f:
-                f.write(res.content)
-        else:
-            log_error(f"Failed to download token.pickle, link got HTTP response: {res.status_code}")
-    except Exception as e:
-        log_error(f"TOKEN_PICKLE_URL: {e}")
-except:
-    pass
+
+# PRIVATE FILES:
+   
 try:
     ACCOUNTS_ZIP_URL = getConfig('ACCOUNTS_ZIP_URL')
     if len(ACCOUNTS_ZIP_URL) == 0:
@@ -536,6 +565,21 @@ try:
     srun(["unzip", "-q", "-o", "accounts.zip"])
     srun(["chmod", "-R", "777", "accounts"])
     osremove("accounts.zip")
+except:
+    pass
+try:
+    TOKEN_PICKLE_URL = getConfig('TOKEN_PICKLE_URL')
+    if len(TOKEN_PICKLE_URL) == 0:
+        raise KeyError
+    try:
+        res = rget(TOKEN_PICKLE_URL)
+        if res.status_code == 200:
+            with open('token.pickle', 'wb+') as f:
+                f.write(res.content)
+        else:
+            log_error(f"Failed to download token.pickle, link got HTTP response: {res.status_code}")
+    except Exception as e:
+        log_error(f"TOKEN_PICKLE_URL: {e}")
 except:
     pass
 try:
@@ -566,6 +610,21 @@ try:
             log_error(f"Failed to download cookies.txt, link got HTTP response: {res.status_code}")
     except Exception as e:
         log_error(f"YT_COOKIES_URL: {e}")
+except:
+    pass
+try:
+    NETRC_URL = getConfig('NETRC_URL')
+    if len(NETRC_URL) == 0:
+        raise KeyError
+    try:
+        res = rget(NETRC_URL)
+        if res.status_code == 200:
+            with open('.netrc', 'wb+') as f:
+                f.write(res.content)
+        else:
+            log_error(f"Failed to download .netrc {res.status_code}")
+    except Exception as e:
+        log_error(f"NETRC_URL: {e}")
 except:
     pass
 
