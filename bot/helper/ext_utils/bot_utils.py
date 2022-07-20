@@ -347,7 +347,7 @@ CPU : {cpu}% || RAM : {mem_p}%\n
 USED : {used} || FREE :{free}
 SENT : {sent} || RECV : {recv}\n
 ONGOING TASKS:
-DL: {num_active} || UP : {num_upload} || SPLIT : {num_split}
+DL: {num_active} 🔻 || UP : {num_upload} 🔺️ || SPLIT : {num_split}
 ZIP : {num_archi} || UNZIP : {num_extract} || TOTAL : {tasks} 
 """
     return stats
