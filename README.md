@@ -10,10 +10,10 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 - [ ] Uptobox can be use as Premium/Non-Premium Both;
 - [ ] ❤️‍ leech 4gb files if Owner has a Premium;
 - [ ] 🤖 Reboot HEROKU form bot.
-- [ ] 🥳💖 Surprise...Addition of a new feature
+- [ ] 🥳 Surprise... Addition of a new feature.
 
-# Features:
-## By [Radioactive](https://github.com/Coolboyrajat)
+# Additional Features:
+
 - Mirror logs;
 - Database Support for leech logs;
 - Sending Leeched files and Mirror links in user's PM by the bot;
