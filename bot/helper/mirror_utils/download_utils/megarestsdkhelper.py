@@ -10,7 +10,7 @@ from ..status_utils.mega_download_status import MegaDownloadStatus
 from megasdkrestclient import MegaSdkRestClient, constants
 
 
-class MegaDownloadeHelper:
+class MegaDownloader:
     POLLING_INTERVAL = 3
 
     def __init__(self, listener):
