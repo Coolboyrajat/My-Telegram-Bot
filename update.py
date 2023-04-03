@@ -42,14 +42,14 @@ try:
     if len(UPSTREAM_BRANCH) == 0:
        raise TypeError
 except:
-    UPSTREAM_BRANCH = 'h-code'
+    UPSTREAM_BRANCH = 'update'
 
 if ospath.exists('.git'):
     srun(["rm", "-rf", ".git"])
 
 update = srun([f"git init -q \
-                 && git config --global user.email rajatkumarsahu444@gmail.com \
-                 && git config --global user.name CoolboyRajat \
+                 && git config --global user.email radioactive@reborn.com \
+                 && git config --global user.name Rajat \
                  && git add . \
                  && git commit -sm update -q \
                  && git remote add origin {UPSTREAM_REPO} \
@@ -58,6 +58,9 @@ update = srun([f"git init -q \
 
 if update.returncode == 0:
     log_info('Successfully updated with latest commit from UPSTREAM_REPO')
+    log_info(f'Upstream Repo: {UPSTREAM_REPO}')
+    log_info(f'Upstream Branch: {UPSTREAM_BRANCH}')
 else:
     log_error('Something went wrong while updating, check UPSTREAM_REPO if valid or not!')
-
+    log_info(f'Entered Upstream Repo: {UPSTREAM_REPO}')
+    log_info(f'Entered Upstream Branch: {UPSTREAM_BRANCH}')
