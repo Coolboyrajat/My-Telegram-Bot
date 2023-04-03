@@ -17,13 +17,10 @@
 - Seed torrents to specific ratio and time
 - Edit Global Options while bot running from bot settings
 ### Aria2c
-- Select files from Torrent before and while downloading
-- Seed torrents to specific ratio and time
 - Netrc support
 - Direct link authentication for specific link while using the bot (it will work even if only username or password)
 - Improve aria.sh
 - Fix all download listener functions and status
-- Edit Global Options while bot running from bot settings
 ### Leech
 - Leech support
 - Splitting
@@ -42,13 +39,10 @@
 - Use Token.pickle if file not found with Service Account, for all Gdrive functions
 - Random Service Account for each task
 ### Status
-- Clone Status
-- Extract Status
-- Archive Status
-- Seed Status
-- Status Pages for unlimited tasks
-- Ability to cancel upload/clone/archive/extract/split
-- Cancel all buttons for choosing specific tasks status to cancel
+- Monitor each tasks <em>Cloning Status, Extracting Status, Archiving Status, Seeding Status</em>
+- Multiple Status Pages for unlimited tasks
+- Ability to cancel on going tasks like upload/clone/archive/extract/split
+- Cancel all command to end every tasks or specific category 
 - Fix flooding issues
 - Fix overall upload and download speed
 ### Yt-dlp
@@ -58,7 +52,7 @@
 - Custom default video quality for each user
 - Fix download progress
 ### Database
-- Mongo Database support
+- MongoDB, ElephantSQL, Railway Database support
 - Store bot settings
 - Store user settings including thumbnails and rclone config in database
 - Store private files
@@ -70,9 +64,10 @@
 - Search on torrents with variable plugins using qBittorrent search engine
 ### Archives
 - Zip instead of tar
-- Using 7-zip tool to extract all supported types
-- Extract rar, zip and 7z within folder or splits with or without password
 - Zip file/folder with or without password
+- Extract rar, zip and 7z within folder or splits with or without password
+- Extract password protected files Using 7-zip tool to extract all supported types
+  > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS, DEB, DMG, FAT, HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, NTFS, RPM, SquashFS, UDF, VHD, XAR, Z, TAR.XZ
 ### RSS
 - Rss feed. Based on this repository [rss-chan](https://github.com/hyPnOtICDo0g/rss-chan)
 - Filters added
@@ -89,26 +84,22 @@
 ### Overall
 - Docker image support for linux `amd64, arm64/v8, arm/v7`
 - Switch from sync to async
-- SWitch from python-telegram-bot to pyrogram
+- Switch from python-telegram-bot to pyrogram
 - Edit variables and overwrite the private files while bot running
 - Update bot at startup and with restart command using `UPSTREAM_REPO`
 - Improve Telegraph. Based on [Sreeraj](https://github.com/SVR666) loaderX-bot
-- Mirror/Leech/Watch/Clone/Count/Del by reply
-- Mirror/Leech/Clone multi links/files with one command
+- Multi links/files Mirror/Leech/Clone/Zip/Unzip with one command in same directory. Mostly helpful in unziping tg file parts
 - Custom name for all links except torrents. For files you should add extension except yt-dlp links
 - Extensions Filter for the files to be uploaded/cloned
-- View Link button. Extra button to open index link in broswer instead of direct download for file
+- View Link button to open index link in broswer instead of direct download for file
+- Additional inline button for multi function
 - Queueing System
-- Ability to zip/unzip multi links in same directory. Mostly helpful in unziping tg file parts
-- Almost all repository functions have been improved and many other details can't mention all of them
-- Many bugs have been fixed
 
 ## From Base and other Repositories
 - Mirror direct download links, Torrent, Mega.nz and Telegram files to Google Drive
 - Copy files from someone's Drive to your Drive
 - Download/Upload progress, Speeds and ETAs
 - Mirror all youtube-dl supported links
-- Docker support
 - Uploading to Team Drive
 - Index Link support
 - Service Account support
@@ -116,11 +107,8 @@
 - Multiple Trackers support
 - Shell and Executor
 - Add sudo users
-- Extract password protected files
-- Extract these filetypes
-  > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS, DEB, DMG, FAT, HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, NTFS, RPM, SquashFS, UDF, VHD, XAR, Z, TAR.XZ
 - Direct links Supported:
-  > mediafire, letsupload.io, hxfile.co, antfiles, fembed.com, fembed.net, femax20.com, layarkacaxxi.icu, fcdn.stream, sbplay.org, naniplay.com, naniplay.nanime.in, naniplay.nanime.biz, sbembed.com, streamtape.com, streamsb.net, feurl.com, upload.ee, pixeldrain.com, racaty.net, 1fichier.com, 1drv.ms (Only works for file not folder or business account), uptobox.com and solidfiles.com, linkbox.to, shrdsk.me (sharedisk.io), akmfiles.com, wetransfer.com, mdisk.me (with ytdl), terabox.com (you need to add cookies txt with name) and almost every anonfiles based sites
+  > mediafire, letsupload.io, hxfile.co, antfiles, fembed.com, fembed.net, femax20.com, layarkacaxxi.icu, fcdn.stream, sbplay.org, naniplay.com, naniplay.nanime.in, naniplay.nanime.biz, sbembed.com, streamtape.com, streamsb.net, feurl.com, upload.ee, pixeldrain.com, racaty.net, 1fichier.com, 1drv.ms (Only works for file not folder or business account), uptobox.com and solidfiles.com, linkbox.to, shrdsk.me (sharedisk.io), akmfiles.com, wetransfer.com, mdisk.me (with ytdl) and almost every anonfiles based sites
 
 # How to deploy?
 
@@ -168,12 +156,10 @@ _____REMOVE_THIS_LINE_____=True
 Fill up rest of the fields. Meaning of each field is discussed below:
 **0. Special Vars for features added by Arsh **
 
-- `LEECH_LOG` - Chat id of channel/group where leeched files will be uploaded, **NOTE:** only put 1 channel/group id starts with -100xxxxxxxxx, if you leave this empty bot will not send leeched files anywhere.
+- `LEECH_LOG` - Chat id of channel/group where leeched files will be uploaded, 
+>**NOTE:** only put 1 channel/group id starts with -100xxxxxxxxx, if you leave this empty bot will not send leeched files anywhere.
 - `MIRROR_LOGS` - Chat id of channels/groups where you want to store Mirror logs
 - `BOT_PM` - set it `True` if you want to send mirror links and leeched files in user's PM, Default is `False`.
-- `MEGAREST` - set it `True` if you want to use Megasdkrest, Default is `False`.
-- `APPDRIVE_EMAIL` - Your Appdrive account email
-- `APPDRIVE_PASS` - Your Appdrive account password
 - `SOURCE_LINK` -  set it `True` if you want to get Source Link of Mirrored/Cloned file,  Default is `False`.
 
 **1. Required Fields**
@@ -182,6 +168,14 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `OWNER_ID`: The Telegram User ID (not username) of the Owner of the bot. `Int`
 - `TELEGRAM_API`: This is to authenticate your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org. `Int`
 - `TELEGRAM_HASH`: This is to authenticate your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org. `Str`
+
+### GDrirve Tools
+
+- `GDRIVE_ID`: Fill with the Folder/TeamDrive ID of the Google Drive OR `root` to which you want to upload all the mirrors using google-api-python-client. `Str`
+
+- `IS_TEAM_DRIVE`: Set `True` if uploading to TeamDrive using google-api-python-client. Default is `False`. `Bool`
+
+- `USE_SERVICE_ACCOUNTS`: Whether to use Service Accounts or not, with google-api-python-client. For this to work see [Using Service Accounts](https://github.com/anasty17/mirror-leech-telegram-bot#generate-service-accounts-what-is-service-account) section below. Default is `False`. `Bool`
 
 **2. Optional Fields**
 
@@ -199,12 +193,6 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `INCOMPLETE_TASK_NOTIFIER`: Get incomplete task messages after restart. Require database and superGroup. Default is `False`. `Bool`
 - `UPTOBOX_TOKEN`: Uptobox token to mirror uptobox links. Get it from [Uptobox Premium Account](https://uptobox.com/my_account). `str`
 - `YT_DLP_QUALITY`: Default yt-dlp quality. Check all possible formats [HERE](https://github.com/yt-dlp/yt-dlp#filtering-formats). `str`
-
-### GDrirve Tools
-
-- `GDRIVE_ID`: This is the Folder/TeamDrive ID of the Google Drive OR `root` to which you want to upload all the mirrors using google-api-python-client. `Str`
-- `IS_TEAM_DRIVE`: Set `True` if uploading to TeamDrive using google-api-python-client. Default is `False`. `Bool`
-- `USE_SERVICE_ACCOUNTS`: Whether to use Service Accounts or not, with google-api-python-client. For this to work see [Using Service Accounts](https://github.com/anasty17/mirror-leech-telegram-bot#generate-service-accounts-what-is-service-account) section below. Default is `False`. `Bool`
 - `INDEX_URL`: Refer to https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index. `Str`
 - `STOP_DUPLICATE`: Bot will check file/folder name in Drive incase uploading to `GDRIVE_ID`. If it's present in Drive then downloading or cloning will be stopped. (**NOTE**: Item will be checked using name and not hash, so this feature is not perfect yet). Default is `False`. `Bool`
 
