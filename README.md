@@ -1,67 +1,49 @@
-This is a Telegram Bot written in Python for mirroring files on the Internet to your Google Drive or Telegram. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+# About
+>This is a Telegram Bot written in Python for mirroring files on the Internet to your Google Drive or Telegram.
 
-## If you Like My work Star the repo and Follow me on Github
+## If you Like My work Star ⭐⭐⭐ the repo and Follow me on Github
 
 ## Notice  -  This Repo is not for newbies or noobs, so read the guide properly, No support will be provided for the deployment related errors and don't report useless deployment related errors, only Report Bot's Functionaning related issues, Read the Readme All extra features implemented by me is written there so don't ask or request for any other features.
 
 # Upcoming Features:
-- [ ] Multi drive Selection before uploading;
-  - If have enough rights it will show automatically 🤔, help!!
-- [ ] Uptobox can be use as Premium/Non-Premium Both;
-- [ ] ❤️‍ leech 4gb files if TG_API & HASH has a Premium Account;
-- [ ] 🤖 Reboot HEROKU form bot.
-- [ ] 🥳 Surprise... Addition of a new feature.
+- [ ] ⚠️ Delete Button; 
+- [ ] 😍 Uptobox Token var in runtime;
+- [ ] ❤️ Addition of a new feature.
 
-# Additional Features:
-
-- Mirror logs;
-- Database Support for leech logs;
-- Sending Leeched files and Mirror links in user's PM by the bot;
-- Appdrive Support;
-- Megasdkrest Client implimentation;
-- Change `/commands` directly from config.env;
-- And many more little changes can't remember ! 😁
-
-## From Other Repositories
-- qBittorrent
+# Features
+- qBittorrent (Support seeding until reaching specific ratio or time)
 - Select files from Torrent before downloading using qbittorrent
-- Leech (splitting, thumbnail for each user, setting as document or as media for each user)
+
+- Mirror `direct download links`, `Torrent`, `Mega.nz links` `Uptobox` (Premium required) and `Telegram files` to Google Drive
 - Size limiting for Torrent/Direct, Zip/Unzip, Mega and Clone
-- Stop duplicates for all tasks except yt-dlp tasks
-- Zip/Unzip G-Drive links
-- Counting files/folders from Google Drive link
-- View Link button, extra button to open file index link in broswer instead of direct download
-- Status Pages for unlimited tasks
-- Clone status
+- Leech (splitting, thumbnail for each user, setting as document or as media for each user)
+- Stop duplicates for all tasks except yt-dlp tasks;
+- Zip/Unzip G-Drive links;
+- Counting files/folders from Google Drive link;
+- Inline Buttons (Drive, Index, View & Addition 3 interactive button);
+- Support Cloning;
 - Search in multiple Drive folder/TeamDrive
 - Recursive Search (only with `root` or TeamDrive ID, folder ids will be listed with non-recursive method)
 - Multi-TD list by token.pickle if exists
 - Extract rar, zip and 7z splits with or without password
 - Zip file/folder with or without password
 - Use Token.pickle if file not found with Service Account for all Gdrive functions
-- Random Service Account at startup
-- Mirror/Leech/Watch/Clone/Count/Del by reply
+- Service Account to boost Drive daily limit;
 - YT-DLP quality buttons
 - Search on torrents with Torrent Search API or with variable plugins using qBittorrent search engine
 - Docker image support for linux `amd64, arm64, arm/v7, arm/v6, s390x, arm64/v8` (**Note**: Use `anasty17/mltb:arm64` for `arm64/v8` or oracle)
 - Update bot at startup and with restart command using `UPSTREAM_REPO`
-- Qbittorrent seed until reaching specific ratio or time
 - Rss feed and filter. Based on this repository [rss-chan](https://github.com/hyPnOtICDo0g/rss-chan)
 - Save leech settings including thumbnails in database
-- Mirror/Leech/Clone multi links/files with one command
 - Extenstion Filter for uploading/cloning files
 - Incomplete task notifier to get incomplete task messages after restart, works with database.
-- Many bugs have been fixed
 
-- Mirror direct download links, Torrent, and Telegram files to Google Drive
+
 - Mirror Mega.nz links to Google Drive
 - Copy files from someone's Drive to your Drive (Using Autorclone)
 - Download/Upload progress, Speeds and ETAs
 - Mirror all yt-dlp supported links
-- Docker support
-- Uploading to Team Drive
 - Index Link support
-- Service Account support
 - Delete files from Drive
 - Shortener support
 - Multiple Trackers support
