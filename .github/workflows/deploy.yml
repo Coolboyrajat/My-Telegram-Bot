@@ -1,9 +1,6 @@
 name: Manually Deploy to Heroku
 
-on:
-  workflow_dispatch:
-    branches:
-      - "heroku"
+on: workflow_dispatch
 
 jobs:
   deploy:
@@ -21,3 +18,5 @@ jobs:
           region: "us"
         env:
           HD_CONFIG_FILE_URL: ${{secrets.CONFIG_FILE_URL}}
+          HD_HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+          HD_HEROKU_APP_NAME: ${{secrets.HEROKU_APP_NAME}}

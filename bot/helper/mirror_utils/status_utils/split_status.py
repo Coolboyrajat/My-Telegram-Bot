@@ -1,11 +1,17 @@
+from bot import LOGGER
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, MirrorStatus, EngineStatus
 
 
 class SplitStatus:
-    def __init__(self, name, path, size):
+    def __init__(self, name, size, gid, listener):
         self.__name = name
-        self.__path = path
+        self.__gid = gid
         self.__size = size
+        self.__listener = listener
+        self.message = listener.message
+
+    def gid(self):
+        return self.__gid
 
     def progress(self):
         return '0'
@@ -16,9 +22,6 @@ class SplitStatus:
     def name(self):
         return self.__name
 
-    def path(self):
-        return self.__path
-
     def size(self):
         return get_readable_file_size(self.__size)
 
@@ -28,8 +31,16 @@ class SplitStatus:
     def status(self):
         return MirrorStatus.STATUS_SPLITTING
 
-    def eng(self):
-        return EngineStatus.STATUS_SPLIT
-
     def processed_bytes(self):
         return 0
+
+    def download(self):
+        return self
+
+    def cancel_download(self):
+        LOGGER.info(f'Cancelling Split: {self.__name}')
+        self.__listener.split_proc.kill()
+        self.__listener.onUploadError('splitting stopped by user!')
+
+    def eng(self):
+        return EngineStatus.STATUS_SPLIT_MERGE
