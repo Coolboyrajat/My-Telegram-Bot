@@ -52,7 +52,7 @@
 - Custom default video quality for each user
 - Fix download progress
 ### Database
-- MongoDB, ElephantSQL, Railway Database support
+- [MongoDB](https://www.mongodb.com/) , [ElephantSQL](https://www.elephantsql.com/) , [Railway](http://railway.app/) Database support
 - Store bot settings
 - Store user settings including thumbnails and rclone config in database
 - Store private files
@@ -63,7 +63,7 @@
 - Search on torrents with Torrent Search API
 - Search on torrents with variable plugins using qBittorrent search engine
 ### Archives
-- Zip instead of tar
+- .zip instead of .tar
 - Zip file/folder with or without password
 - Extract rar, zip and 7z within folder or splits with or without password
 - Extract password protected files Using 7-zip tool to extract all supported types
@@ -153,19 +153,20 @@ cp config_sample.env config.env
 ```
 _____REMOVE_THIS_LINE_____=True
 ```
-Fill up rest of the fields. Meaning of each field is discussed below:
+Meaning of each field is discussed below:
+
 **0. Special Vars for features added by Arsh **
 
 - `LEECH_LOG` - Chat id of channel/group where leeched files will be uploaded, 
->**NOTE:** only put 1 channel/group id starts with -100xxxxxxxxx, if you leave this empty bot will not send leeched files anywhere.
+>**NOTE:** Only put 1 channel/group id starts with -100xxxxxxxxx, if you leave this empty bot will not send leeched files anywhere.
 - `MIRROR_LOGS` - Chat id of channels/groups where you want to store Mirror logs
 - `BOT_PM` - set it `True` if you want to send mirror links and leeched files in user's PM, Default is `False`.
 - `SOURCE_LINK` -  set it `True` if you want to get Source Link of Mirrored/Cloned file,  Default is `False`.
 
 **1. Required Fields**
 
-- `BOT_TOKEN`: The Telegram Bot Token that you got from [@BotFather](https://t.me/BotFather). `Str`
 - `OWNER_ID`: The Telegram User ID (not username) of the Owner of the bot. `Int`
+- `BOT_TOKEN`: The Telegram Bot Token that you got from [@BotFather](https://t.me/BotFather). `Str`
 - `TELEGRAM_API`: This is to authenticate your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org. `Int`
 - `TELEGRAM_HASH`: This is to authenticate your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org. `Str`
 
@@ -177,16 +178,22 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 
 - `USE_SERVICE_ACCOUNTS`: Whether to use Service Accounts or not, with google-api-python-client. For this to work see [Using Service Accounts](https://github.com/anasty17/mirror-leech-telegram-bot#generate-service-accounts-what-is-service-account) section below. Default is `False`. `Bool`
 
+- `DOWNLOAD_DIR`: The path to the local folder where the downloads should be downloaded to. `Str`
+- `STATUS_UPDATE_INTERVAL`: Time in seconds after which the progress/status message will be updated. Recommended `10` seconds at least. `Int`
+
 **2. Optional Fields**
 
-- `USER_SESSION_STRING`: To download/upload from your telegram account and to send rss. To generate session string use this command `python3 generate_string_session.py` after mounting repo folder for sure. `Str`. **NOTE**: You can't use bot with private message. Use it with superGroup.
-- `DATABASE_URL`: Your Mongo Database URL (Connection string). Follow this [Generate Database](https://github.com/anasty17/mirror-leech-telegram-bot/tree/master#generate-database) to generate database. Data will be saved in Database: auth and sudo users, users settings including thumbnails for each user, rss data and incomplete tasks. **NOTE**: You can always edit all settings that saved in database from the official site -> (Browse collections). `Str`
-- `DOWNLOAD_DIR`: The path to the local folder where the downloads should be downloaded to. `Str`
-- `CMD_SUFFIX`: commands index number. This number will added at the end all commands. `Str`|`Int`
+- `USER_SESSION_STRING`: To download/upload from your telegram account and to send rss. To generate session string use this command `python3 generate_string_session.py` after mounting repo folder for sure. `Str`. 
+>**NOTE**: You can't use bot with private message. Use it with superGroup.
+
+- `DATABASE_URL`: Use any of the [Database URL](https://github.com/Coolboyrajat/My-Telegram-Bot/edit/master/README.md#database) mention above (Connection string). Follow this [Generate Database](https://github.com/Coolboyrajat/My-Telegram-Bot/edit/master/README.md#generate-database) to generate database. Data will be saved in Database: auth and sudo users, users settings including thumbnails for each user, rss data and incomplete tasks. 
+>**NOTE**: You can always edit all settings that saved in database from the official site -> (Browse collections). `Str`
 - `AUTHORIZED_CHATS`: Fill user_id and chat_id of groups/users you want to authorize. Separate them by space. `Int`
+- `CMD_SUFFIX`: commands index number. This number will added at the end all commands. `Str`|`Int`
+
 - `SUDO_USERS`: Fill user_id of users whom you want to give sudo permission. Separate them by space. `Int`
-- `DEFAULT_UPLOAD`: Whether `rc` to upload to `RCLONE_PATH` or `gd` to upload to `GDRIVE_ID`. Default is `gd`. Read More [HERE](https://github.com/anasty17/mirror-leech-telegram-bot/tree/master#upload).`Str`
-- `STATUS_UPDATE_INTERVAL`: Time in seconds after which the progress/status message will be updated. Recommended `10` seconds at least. `Int`
+- `DEFAULT_UPLOAD`: Whether `rc` to upload to `RCLONE_PATH` or `gd` to upload to `GDRIVE_ID`. Default is `gd`. Read More [HERE](https://github.com/Coolboyrajat/My-Telegram-Bot/edit/master/README.md#upload).`Str`
+
 - `AUTO_DELETE_MESSAGE_DURATION`: Interval of time (in seconds), after which the bot deletes it's message and command message which is expected to be viewed instantly. **NOTE**: Set to `-1` to disable auto message deletion. `Int`
 - `STATUS_LIMIT`: Limit the no. of tasks shown in status message with buttons. Default is `10`. **NOTE**: Recommended limit is `4` tasks. `Int`
 - `EXTENSION_FILTER`: File extensions that won't upload/clone. Separate them by space. `Str`
