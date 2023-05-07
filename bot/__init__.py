@@ -248,19 +248,19 @@ if len(DEF_IMDB_TEMP) == 0:
 
 LOGGER.info("Generating SESSION_STRING")
 app = Client(name='pyrogram', api_id=(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
-
-MEGA_API_KEY = environ.get('MEGA_API_KEY', '')
-if len(MEGA_API_KEY) == 0:
-    log_warning('MEGA API KEY not provided!')
-    MEGA_API_KEY = ''
+    
 
 MEGA_EMAIL_ID = environ.get('MEGA_EMAIL_ID', '')
 MEGA_PASSWORD = environ.get('MEGA_PASSWORD', '')
-if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0:
-    log_warning('MEGA Credentials not provided!')
+MEGA_API_KEY = environ.get('MEGA_API_KEY', '')
+if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0 or len(MEGA_API_KEY) == 0:
+    log_warning('MEGA Credentials or API Key not provided!')
     MEGA_EMAIL_ID = ''
     MEGA_PASSWORD = ''
-
+    MEGA_API_KEY = ''
+else:
+    log_warning('MEGA Credentials in Action')
+    
 tgBotMaxFileSize = 2097151000
 
 TG_SPLIT_SIZE = environ.get('TG_SPLIT_SIZE', '')
@@ -500,16 +500,18 @@ START_BTN1_NAME = environ.get('START_BTN1_NAME', '')
 START_BTN1_URL = environ.get('START_BTN1_URL', '')
 if len(START_BTN1_NAME) == 0 or len(START_BTN1_URL) == 0:
     START_BTN1_NAME = 'Master'
-    START_BTN1_URL = 'https://t.me/krn_adhikari'
+    START_BTN1_URL = 'https://t.me/The_Positive_viewer'
 
 START_BTN2_NAME = environ.get('START_BTN2_NAME', '')
 START_BTN2_URL = environ.get('START_BTN2_URL', '')
 if len(START_BTN2_NAME) == 0 or len(START_BTN2_URL) == 0:
     START_BTN2_NAME = 'Support Group'
-    START_BTN2_URL = 'https://t.me/WeebZone_updates'
+    START_BTN2_URL = 'https://discord.gg/PmUtCm76ch'
     
 DELETE_BTN = environ.get('DELETE_BTN', '')
 DELETE_BTN = DELETE_BTN.lower() == 'true'
+if len(DELETE_BTN) == 'true':
+    log_warning(Delete Button Activated!!)
 
 BUTTON_FOUR_NAME = environ.get('BUTTON_FOUR_NAME', '')
 BUTTON_FOUR_URL = environ.get('BUTTON_FOUR_URL', '')
