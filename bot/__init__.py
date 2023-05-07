@@ -259,7 +259,7 @@ if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0 or len(MEGA_API_KEY) == 0:
     MEGA_PASSWORD = ''
     MEGA_API_KEY = ''
 else:
-    log_warning('MEGA Credentials in Action')
+    log_info('MEGA Credentials in Action')
     
 tgBotMaxFileSize = 2097151000
 
@@ -511,7 +511,7 @@ if len(START_BTN2_NAME) == 0 or len(START_BTN2_URL) == 0:
 DELETE_BTN = environ.get('DELETE_BTN', '')
 DELETE_BTN = DELETE_BTN.lower() == 'true'
 if len(DELETE_BTN) == 'true':
-    log_warning(Delete Button Activated!!)
+    log_info(Delete Button Activated!!)
 
 BUTTON_FOUR_NAME = environ.get('BUTTON_FOUR_NAME', '')
 BUTTON_FOUR_URL = environ.get('BUTTON_FOUR_URL', '')
@@ -814,7 +814,8 @@ config_dict = {'ANILIST_ENABLED': ANILIST_ENABLED,
                'WEB_PINCODE': WEB_PINCODE,
                'YTDLP_LIMIT': YTDLP_LIMIT,
                'MAX_PLAYLIST': MAX_PLAYLIST,
-               'YT_DLP_QUALITY': YT_DLP_QUALITY}
+               'YT_DLP_QUALITY': YT_DLP_QUALITY,
+               'DELETE_BTN': DELETE_BTN}
 
 if GDRIVE_ID:
     DRIVES_NAMES.append("Main")
