@@ -507,6 +507,9 @@ START_BTN2_URL = environ.get('START_BTN2_URL', '')
 if len(START_BTN2_NAME) == 0 or len(START_BTN2_URL) == 0:
     START_BTN2_NAME = 'Support Group'
     START_BTN2_URL = 'https://t.me/WeebZone_updates'
+    
+DELETE_BTN = environ.get('DELETE_BTN', '')
+DELETE_BTN = DELETE_BTN.lower() == 'true'
 
 BUTTON_FOUR_NAME = environ.get('BUTTON_FOUR_NAME', '')
 BUTTON_FOUR_URL = environ.get('BUTTON_FOUR_URL', '')
@@ -520,11 +523,6 @@ if len(BUTTON_FIVE_NAME) == 0 or len(BUTTON_FIVE_URL) == 0:
     BUTTON_FIVE_NAME = ''
     BUTTON_FIVE_URL = ''
 
-BUTTON_SIX_NAME = environ.get('BUTTON_SIX_NAME', '')
-BUTTON_SIX_URL = environ.get('BUTTON_SIX_URL', '')
-if len(BUTTON_SIX_NAME) == 0 or len(BUTTON_SIX_URL) == 0:
-    BUTTON_SIX_NAME = ''
-    BUTTON_SIX_URL = ''
 
 SHORTENER = environ.get('SHORTENER', '')
 SHORTENER_API = environ.get('SHORTENER_API', '')
@@ -613,14 +611,14 @@ FINISHED_PROGRESS_STR = environ.get('FINISHED_PROGRESS_STR', '')
 UN_FINISHED_PROGRESS_STR = environ.get('UN_FINISHED_PROGRESS_STR', '')
 MULTI_WORKING_PROGRESS_STR = environ.get('MULTI_WORKING_PROGRESS_STR', '')
 if len(FINISHED_PROGRESS_STR) == 0 or len(FINISHED_PROGRESS_STR) == 0 or len(MULTI_WORKING_PROGRESS_STR) == 0:
-    FINISHED_PROGRESS_STR = '█' # '■'
-    UN_FINISHED_PROGRESS_STR = '▒' # '□'
-    MULTI_WORKING_PROGRESS_STR = '▁ ▂ ▃ ▄ ▅ ▆ ▇'
+    FINISHED_PROGRESS_STR = '⬢'     # '■'
+    UN_FINISHED_PROGRESS_STR = '⬡'  # '□'
+    MULTI_WORKING_PROGRESS_STR = '⬡ ⬡ ⬡ ⬡ ⬡ ⬡ ⬡'
 MULTI_WORKING_PROGRESS_STR = (MULTI_WORKING_PROGRESS_STR.replace("'", '').replace('"', '').replace('[', '').replace(']', '').replace(",", "")).split(' ')
 
 if len(MULTI_WORKING_PROGRESS_STR) != 7:
-    LOGGER.warning("Multi Progress doesn't contain 7 Symbols. Check Agian, Using Default for Now !")
-    MULTI_WORKING_PROGRESS_STR = '▁ ▂ ▃ ▄ ▅ ▆ ▇'.split(' ')
+    LOGGER.warning("Multi Progress doesn't contain 7 Symbols. Check Again, Using Default for Now !")
+    MULTI_WORKING_PROGRESS_STR = '° ° ° ° ° ° °'.split(' ')
 
 IMAGE_URL = environ.get('IMAGE_URL', '')
 if len(IMAGE_URL) == 0:
