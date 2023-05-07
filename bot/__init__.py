@@ -78,12 +78,55 @@ if ospath.exists('pyrogram.session'):
 if ospath.exists('pyrogram.session-journal'):
     osremove('pyrogram.session-journal')
 
+OWNER_ID = environ.get('OWNER_ID', '')
+if len(OWNER_ID) == 0:
+    log_error("OWNER_ID variable is missing! Exiting now")
+    exit(1)
+else:
+    OWNER_ID = int(OWNER_ID)
+
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
     log_error("BOT_TOKEN variable is missing! Exiting now")
     exit(1)
 
 bot_id = int(BOT_TOKEN.split(':', 1)[0])
+
+TELEGRAM_API = environ.get('TELEGRAM_API', '')
+if len(TELEGRAM_API) == 0:
+    log_error("TELEGRAM_API variable is missing! Exiting now")
+    exit(1)
+else:
+    TELEGRAM_API = int(TELEGRAM_API)
+
+TELEGRAM_HASH = environ.get('TELEGRAM_HASH', '')
+if len(TELEGRAM_HASH) == 0:
+    log_error("TELEGRAM_HASH variable is missing! Exiting now")
+    exit(1)
+
+DOWNLOAD_DIR = environ.get('DOWNLOAD_DIR', '')
+if len(DOWNLOAD_DIR) == 0:
+    DOWNLOAD_DIR = '/usr/src/app/downloads/'
+elif not DOWNLOAD_DIR.endswith("/"):
+    DOWNLOAD_DIR = f'{DOWNLOAD_DIR}/'
+
+STATUS_UPDATE_INTERVAL = environ.get('STATUS_UPDATE_INTERVAL', '')
+if len(STATUS_UPDATE_INTERVAL) == 0:
+    STATUS_UPDATE_INTERVAL = 6
+else:
+    STATUS_UPDATE_INTERVAL = int(STATUS_UPDATE_INTERVAL)
+
+AUTO_DELETE_MESSAGE_DURATION = environ.get('AUTO_DELETE_MESSAGE_DURATION', '')
+if len(AUTO_DELETE_MESSAGE_DURATION) == 0:
+    AUTO_DELETE_MESSAGE_DURATION = 20
+else:
+    AUTO_DELETE_MESSAGE_DURATION = int(AUTO_DELETE_MESSAGE_DURATION)
+
+AUTO_DELETE_UPLOAD_MESSAGE_DURATION = environ.get('AUTO_DELETE_UPLOAD_MESSAGE_DURATION', '')
+if len(AUTO_DELETE_UPLOAD_MESSAGE_DURATION) == 0:
+    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = -1
+else:
+    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = int(AUTO_DELETE_UPLOAD_MESSAGE_DURATION)
 
 DATABASE_URL = environ.get('DATABASE_URL', '')
 if len(DATABASE_URL) == 0:
@@ -116,50 +159,9 @@ if DATABASE_URL:
 else:
     config_dict = {}
 
-OWNER_ID = environ.get('OWNER_ID', '')
-if len(OWNER_ID) == 0:
-    log_error("OWNER_ID variable is missing! Exiting now")
-    exit(1)
-else:
-    OWNER_ID = int(OWNER_ID)
-
-TELEGRAM_API = environ.get('TELEGRAM_API', '')
-if len(TELEGRAM_API) == 0:
-    log_error("TELEGRAM_API variable is missing! Exiting now")
-    exit(1)
-else:
-    TELEGRAM_API = int(TELEGRAM_API)
-
-TELEGRAM_HASH = environ.get('TELEGRAM_HASH', '')
-if len(TELEGRAM_HASH) == 0:
-    log_error("TELEGRAM_HASH variable is missing! Exiting now")
-    exit(1)
-
 GDRIVE_ID = environ.get('GDRIVE_ID', '')
 if len(GDRIVE_ID) == 0:
     GDRIVE_ID = ''
-
-DOWNLOAD_DIR = environ.get('DOWNLOAD_DIR', '')
-if len(DOWNLOAD_DIR) == 0:
-    DOWNLOAD_DIR = '/usr/src/app/downloads/'
-elif not DOWNLOAD_DIR.endswith("/"):
-    DOWNLOAD_DIR = f'{DOWNLOAD_DIR}/'
-
-SA_MAIL = environ.get('SA_MAIL', '')
-if len(SA_MAIL) == 0:
-    SA_MAIL = '#SA'    
-
-TGH_THUMB = environ.get('TGH_THUMB', '')
-if len(TGH_THUMB) == 0:
-    TGH_THUMB = 'https://te.legra.ph/file/3325f4053e8d68eab07b5.jpg'
-
-path = "Thumbnails/"
-if not ospath.isdir(path):
-    mkdir(path)
-photo_dir = path + TGH_THUMB.split('/')[-1]
-urlretrieve(TGH_THUMB, photo_dir)
-Image.open(photo_dir).convert("RGB").save('Thumbnails/weeb.jpg', "JPEG")
-osremove(photo_dir)
 
 AUTHORIZED_CHATS = environ.get('AUTHORIZED_CHATS', '')
 if len(AUTHORIZED_CHATS) != 0:
@@ -172,6 +174,33 @@ if len(SUDO_USERS) != 0:
     aid = SUDO_USERS.split()
     for id_ in aid:
         user_data[int(id_.strip())] = {'is_sudo': True}
+
+SA_MAIL = environ.get('SA_MAIL', '')
+if len(SA_MAIL) == 0:
+    SA_MAIL = '#SA'
+
+STATUS_LIMIT = environ.get('STATUS_LIMIT', '')
+STATUS_LIMIT = '' if len(STATUS_LIMIT) == 0 else int(STATUS_LIMIT)
+
+UPTOBOX_TOKEN = environ.get('UPTOBOX_TOKEN', '')
+if len(UPTOBOX_TOKEN) == 0:
+    UPTOBOX_TOKEN = ''
+
+INDEX_URL = environ.get('INDEX_URL', '').rstrip("/")
+if len(INDEX_URL) == 0:
+    INDEX_URL = ''   
+
+TGH_THUMB = environ.get('TGH_THUMB', '')
+if len(TGH_THUMB) == 0:
+    TGH_THUMB = 'https://te.legra.ph/file/3325f4053e8d68eab07b5.jpg'
+
+path = "Thumbnails/"
+if not ospath.isdir(path):
+    mkdir(path)
+photo_dir = path + TGH_THUMB.split('/')[-1]
+urlretrieve(TGH_THUMB, photo_dir)
+Image.open(photo_dir).convert("RGB").save('Thumbnails/weeb.jpg', "JPEG")
+osremove(photo_dir)
 
 PAID_USERS = environ.get('PAID_USERS', '')
 if len(PAID_USERS) != 0:
@@ -259,7 +288,7 @@ if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0 or len(MEGA_API_KEY) == 0:
     MEGA_PASSWORD = ''
     MEGA_API_KEY = ''
 else:
-    log_info('MEGA Credentials in Action')
+    log_info('MEGA Credentials are in Action')
     
 tgBotMaxFileSize = 2097151000
 
@@ -295,38 +324,9 @@ except:
     premium_session = ''
 LOGGER.info(f"TG_SPLIT_SIZE: {TG_SPLIT_SIZE}")
 
-STATUS_LIMIT = environ.get('STATUS_LIMIT', '')
-STATUS_LIMIT = '' if len(STATUS_LIMIT) == 0 else int(STATUS_LIMIT)
-
-UPTOBOX_TOKEN = environ.get('UPTOBOX_TOKEN', '')
-if len(UPTOBOX_TOKEN) == 0:
-    UPTOBOX_TOKEN = ''
-
-INDEX_URL = environ.get('INDEX_URL', '').rstrip("/")
-if len(INDEX_URL) == 0:
-    INDEX_URL = ''
-
 SEARCH_API_LINK = environ.get('SEARCH_API_LINK', '').rstrip("/")
 if len(SEARCH_API_LINK) == 0:
     SEARCH_API_LINK = ''
-
-STATUS_UPDATE_INTERVAL = environ.get('STATUS_UPDATE_INTERVAL', '')
-if len(STATUS_UPDATE_INTERVAL) == 0:
-    STATUS_UPDATE_INTERVAL = 10
-else:
-    STATUS_UPDATE_INTERVAL = int(STATUS_UPDATE_INTERVAL)
-
-AUTO_DELETE_MESSAGE_DURATION = environ.get('AUTO_DELETE_MESSAGE_DURATION', '')
-if len(AUTO_DELETE_MESSAGE_DURATION) == 0:
-    AUTO_DELETE_MESSAGE_DURATION = 30
-else:
-    AUTO_DELETE_MESSAGE_DURATION = int(AUTO_DELETE_MESSAGE_DURATION)
-
-AUTO_DELETE_UPLOAD_MESSAGE_DURATION = environ.get('AUTO_DELETE_UPLOAD_MESSAGE_DURATION', '')
-if len(AUTO_DELETE_UPLOAD_MESSAGE_DURATION) == 0:
-    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = -1
-else:
-    AUTO_DELETE_UPLOAD_MESSAGE_DURATION = int(AUTO_DELETE_UPLOAD_MESSAGE_DURATION)
 
 SEARCH_LIMIT = environ.get('SEARCH_LIMIT', '')
 SEARCH_LIMIT = 0 if len(SEARCH_LIMIT) == 0 else int(SEARCH_LIMIT)
@@ -511,7 +511,7 @@ if len(START_BTN2_NAME) == 0 or len(START_BTN2_URL) == 0:
 DELETE_BTN = environ.get('DELETE_BTN', '')
 DELETE_BTN = DELETE_BTN.lower() == 'true'
 if len(DELETE_BTN) == 'true':
-    log_info(Delete Button Activated!!)
+    log_info('Delete Button Activated!!')
 
 BUTTON_FOUR_NAME = environ.get('BUTTON_FOUR_NAME', '')
 BUTTON_FOUR_URL = environ.get('BUTTON_FOUR_URL', '')
@@ -699,8 +699,6 @@ config_dict = {'ANILIST_ENABLED': ANILIST_ENABLED,
                'BUTTON_FOUR_URL': BUTTON_FOUR_URL,
                'BUTTON_FIVE_NAME': BUTTON_FIVE_NAME,
                'BUTTON_FIVE_URL': BUTTON_FIVE_URL,
-               'BUTTON_SIX_NAME': BUTTON_SIX_NAME,
-               'BUTTON_SIX_URL': BUTTON_SIX_URL,
                'CAPTION_FONT': CAPTION_FONT,
                'CREDIT_NAME': CREDIT_NAME,
                'CLONE_ENABLED': CLONE_ENABLED,

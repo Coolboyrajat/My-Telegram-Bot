@@ -11,7 +11,7 @@ from html import escape
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from bot import bot, Interval, INDEX_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
-                BUTTON_SIX_NAME, BUTTON_SIX_URL, VIEW_LINK, aria2, dispatcher, DOWNLOAD_DIR, \
+                DELETE_BTN, VIEW_LINK, aria2, dispatcher, DOWNLOAD_DIR, \
                 download_dict, download_dict_lock, MAX_LEECH_SIZE, LOGGER, DB_URI, INCOMPLETE_TASK_NOTIFIER, \
                 LEECH_LOG, SOURCE_LINK, BOT_PM, MIRROR_LOGS, AUTO_DELETE_UPLOAD_MESSAGE_DURATION, MEGA_API_KEY
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type
@@ -290,12 +290,22 @@ class MirrorListener:
                     if VIEW_LINK:
                         share_urls = f'{INDEX_URL}/{url_path}?a=view'
                         buttons.buildbutton("🌐 View Link", share_urls)
+
+            if DELETE_BTN is not None:
+                buttons.buildbutton("⚠️ Delete ⚠️")
+                warning = f'Are you sure you want to <b> DELETE THE FILE/FOLDER </b>'
+                buttons.buildbutton(f'YES', f'NO')
+                if (YES) == true:
+                    msg += f'Succesfully Deleted!!'
+                else:
+                    msg += f'Canceled'
+            else:
+                msg += f'You are not the OWNER or SUDO user'
+
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
             if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FIVE_NAME}", f"{BUTTON_FIVE_URL}")
-            if BUTTON_SIX_NAME is not None and BUTTON_SIX_URL is not None:
-                buttons.buildbutton(f"{BUTTON_SIX_NAME}", f"{BUTTON_SIX_URL}")
             if SOURCE_LINK is True:
                 try:
                     mesg = message_args[1]
