@@ -11,7 +11,7 @@ from html import escape
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from bot import bot, Interval, INDEX_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
-                DELETE_BTN, VIEW_LINK, aria2, dispatcher, DOWNLOAD_DIR, \
+                DELETE_BTN, VIEW_LINK, aria2, dispatcher, DOWNLOAD_DIR, user_data, OWNER_ID, \
                 download_dict, download_dict_lock, MAX_LEECH_SIZE, LOGGER, DB_URI, INCOMPLETE_TASK_NOTIFIER, \
                 LEECH_LOG, SOURCE_LINK, BOT_PM, MIRROR_LOGS, AUTO_DELETE_UPLOAD_MESSAGE_DURATION, MEGA_API_KEY
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type
@@ -223,7 +223,7 @@ class MirrorListener:
                     source_link = message_args[1]
                     if is_magnet(source_link):
                         link = telegraph.create_page(
-                        title='Helios-Mirror Source Link',
+                        title='Random Rush',
                         content=source_link,
                     )["path"]
                         buttons.buildbutton(f"🔗 Source Link", f"https://telegra.ph/{link}")
@@ -239,7 +239,7 @@ class MirrorListener:
                             source_link = reply_text.strip()
                             if is_magnet(source_link):
                                 link = telegraph.create_page(
-                                    title='Helios-Mirror Source Link',
+                                    title='Random Rush',
                                     content=source_link,
                                 )["path"]
                                 buttons.buildbutton(f"🔗 Source Link", f"https://telegra.ph/{link}")
@@ -291,16 +291,26 @@ class MirrorListener:
                         share_urls = f'{INDEX_URL}/{url_path}?a=view'
                         buttons.buildbutton("🌐 View Link", share_urls)
 
+            # Only OWNER or SUDO USERS can delete Files/Folder
             if DELETE_BTN is not None:
                 buttons.buildbutton("⚠️ Delete ⚠️")
-                warning = f'Are you sure you want to <b> DELETE THE FILE/FOLDER </b>'
-                buttons.buildbutton(f'YES', f'NO')
-                if (YES) == true:
-                    msg += f'Succesfully Deleted!!'
-                else:
-                    msg += f'Canceled'
+                OWNER_ID = environ.get('OWNER_ID', '')
+                SUDO_USERS = environ.get('SUDO_USERS', '')
+                user_id = update.message.from_user.id 
+
+                if (OWNER_ID == user_id or SUDO_USERS == user_id):
+                    try:
+                        buttons.buildbutton(f'YES', f'NO')
+                        warning = f'Are you sure you want to <b> DELETE THE FILE/FOLDER </b>'
+                        if (YES):
+                            # link = 
+                            msg += f'Succesfully Deleted!!'
+                    except:
+                        msg += f'Canceled'
             else:
                 msg += f'You are not the OWNER or SUDO user'
+            
+            # Any USER can delete their files from BOT
 
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
@@ -311,7 +321,7 @@ class MirrorListener:
                     mesg = message_args[1]
                     if is_magnet(mesg):
                         link = telegraph.create_page(
-                            title='Helios-Mirror Source Link',
+                            title='Random Rush',
                             content=mesg,
                         )["path"]
                         buttons.buildbutton(f"🔗 Source Link", f"https://telegra.ph/{link}")
