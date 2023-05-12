@@ -3,16 +3,16 @@
 
 ## If you Like My work Star ⭐⭐⭐ the repo and Follow me on Github
 
-## Notice  -  This Repo is not for newbies or noobs, so read the guide properly, No support will be provided for the deployment related errors and don't report useless deployment related errors, only Report Bot's Functionaning related issues, Read the Readme All extra features implemented by me is written there so don't ask or request for any other features.
+## Notice  -  This Repo is not for newbies, so read the guide properly, No support will be provided for the deployment related errors and don't report useless deployment related errors, only Report Bot's Functionaning related issues, Read the Readme All extra features implemented by me is written there so don't ask or request for any other features.
 
 # Upcoming Features:
 - [ ] ⚠️ Delete Button; 
 - [ ] 😍 Uptobox Token var in runtime;
 - [ ] ❤️ Addition of a new feature.
-
->NOTE:  Only OWNER or SUDO USERS can delete Files/Folder;
-     💡Any USER can delete their files from BOT if allowed!!;
-
+```
+                              💡 For now only OWNER or SUDO USERS can delete Files/Folder
+                              concept where any USER can delete their files from BOT_PM if allowed!!;
+```
 # Features
 ### qBittorrent
 - Qbittorrent support
