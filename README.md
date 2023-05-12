@@ -10,6 +10,9 @@
 - [ ] 😍 Uptobox Token var in runtime;
 - [ ] ❤️ Addition of a new feature.
 
+>NOTE:  Only OWNER or SUDO USERS can delete Files/Folder;
+     💡Any USER can delete their files from BOT if allowed!!;
+
 # Features
 ### qBittorrent
 - Qbittorrent support
